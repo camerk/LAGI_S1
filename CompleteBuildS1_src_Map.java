@@ -43,7 +43,7 @@ public class Map {
     private RecordC record;
 
 
-    public Map(RecordC rec){
+    public Map(RecordC rec){// Map class: makes window calling other classes in this file
         this.LGFrame = new JFrame("LAGI");
         this.LGFrame.setLayout(new BorderLayout());
         this.LGFrame.setSize(OUTER_FRAME_DIMENSION);
@@ -51,7 +51,7 @@ public class Map {
         populateMenuBar(tableMenuBar);
         this.LGFrame.setJMenuBar(tableMenuBar);
         record = rec.deepClone();
-        copyA(record.rec.grids().dequeue());
+        copyArray(record.rec.grids().dequeue());
         //make Record class seriealizable and then deepClone it into a Record object in the map class
         this.boardPanel = new BoardPanel();
         this.LGFrame.add(this.boardPanel, BorderLayout.CENTER);
@@ -63,10 +63,10 @@ public class Map {
     }
 
 
-    private class BoardPanel extends JPanel{
+    private class BoardPanel extends JPanel{//board class
         final List<TilePanel> boardTiles;
 
-        BoardPanel() {
+        BoardPanel() {//initializes the board (graphical grid)
             super(new GridLayout(20, 20));
             this.boardTiles = new ArrayList<>();
             int x = 0, y = 0;
@@ -96,10 +96,10 @@ public class Map {
         }*/
         }
 
-        public void drawBoard(final BoardPanel boardPanel)
+        public void drawBoard(final BoardPanel boardPanel) // Draws board, currently also used to update the board
         {
             removeAll();
-            copyA(record.rec.grids().dequeue());
+            copyArray(record.rec.grids().dequeue());
             for(final TilePanel tilePanel : boardTiles)
             {
                 //System.out.print(boardTiles.size());
@@ -110,12 +110,12 @@ public class Map {
         }
     }
 
-    private class TilePanel extends JPanel{
+    private class TilePanel extends JPanel{//Tile class contained in board objects
 
         private final int tileX;
         private final int tileY;
 
-        TilePanel(final BoardPanel boardPanel, final int tileX, final int tileY){
+        TilePanel(final BoardPanel boardPanel, final int tileX, final int tileY){//initializes tile
             super(new GridBagLayout());
             this.tileX = tileX;
             this.tileY = tileY;
@@ -124,11 +124,11 @@ public class Map {
             assignTileImage(boardPanel);
             validate();
 
-            addMouseListener(new MouseListener() {
+            addMouseListener(new MouseListener() {// Listens for click action from each tile
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     boardPanel.drawBoard(boardPanel);
-                }
+                }//currently redraws whole board using boardpanel function
 
                 @Override
                 public void mousePressed(MouseEvent e) {
@@ -153,7 +153,7 @@ public class Map {
 
         }
 
-        public void drawTile(final BoardPanel boardPanel)
+        public void drawTile(final BoardPanel boardPanel)//draws each tile using other function calls
         {
             assignTileColor();
             assignTileImage(boardPanel);
@@ -161,7 +161,7 @@ public class Map {
             repaint();
         }
 
-        private void assignTileImage(final BoardPanel boardPanel){
+        private void assignTileImage(final BoardPanel boardPanel){//picks an image to draw on tile based on the map number from the 2D array queue from Frame
             this.removeAll();
             //System.out.println(currMap[this.tileX][this.tileY] +" " +this.tileX + " " +this.tileY);
 
@@ -180,7 +180,7 @@ public class Map {
 
         }
 
-        private String getImageName(int i){
+        private String getImageName(int i){//returns the image for the respective item in the space (using 2D array from frame)
             //this needs to be edited to return the file name of each image that could be represented in the map i.e 1 = "LGImageName.gif"
             //System.out.print(i);
             if (i == -1) {
@@ -213,7 +213,7 @@ public class Map {
             {
                 return "cave4.png";
             }
-            else
+            else//This is used to overwrite the items remaining in the grid from the previous iteration of of the grid
             {
                 return "Blank.png";
             }
@@ -232,7 +232,7 @@ public class Map {
 
     private void populateMenuBar(final JMenuBar tableMenuBar){
         tableMenuBar.add(createFileMenu());
-    }
+    }//Just makes a menu bar, could actually contain things in it at some point
 
     private JMenu createFileMenu(){
         final JMenu fileMenu  = new JMenu("File");
@@ -248,7 +248,7 @@ public class Map {
         return fileMenu;
     }
 
-    public void copyA(int [][] x)
+    public void copyArray(int [][] x) //Copies 2D array avoiding referencing error
     {
         int yaes = 0;
         for (int i = 0; i < 20; i++)

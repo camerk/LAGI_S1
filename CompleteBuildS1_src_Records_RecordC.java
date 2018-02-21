@@ -8,7 +8,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class RecordC implements Cloneable, Serializable {
+public class RecordC implements Cloneable, Serializable {//Implentation of cloning capabilities
 
     public Record rec = new Record();
 

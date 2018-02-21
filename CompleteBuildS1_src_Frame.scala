@@ -10,7 +10,7 @@ import scala.collection.mutable.Queue
  */
 object Frame {
   //declaring variables
-  val Moves = new RecordC() // gor GUI Class
+  val Moves = new RecordC() // for Map Class
   val height: Int = 20
   val width: Int = 20
   val grid = ofDim[Int](height, width)
@@ -39,7 +39,7 @@ object Frame {
   val h = 7
   val w = 7
   val newenv = ofDim[Int](h, w)
-  val gridT = ofDim[Int](height, width) //Added for graphics implementation
+  val gridT = ofDim[Int](height, width) //Added for Map implementation, this mirrors the new env array at a 20 by 20 size so that it can be pushed into the queue that only takes 20 by 20 arrays
   var LGDecision2: Int = 0
 
 
@@ -188,7 +188,7 @@ object Frame {
         isDay = !isDay
       }
       println("Steps Taken: "+totalSteps)
-      Moves.rec.grids.enqueue(copyAT())
+      Moves.rec.grids.enqueue(copyArrayTransport()) // enqueues transport function iteration
       printGrid(h, w,newenv)
     }
     if (isDead){
@@ -200,7 +200,7 @@ object Frame {
   }
 
 
-  def copyAT(): Array[Array[Int]] = {
+  def copyArrayTransport(): Array[Array[Int]] = {//copy function for array in transport function that corrects referencing error
     val temp =ofDim[Int](height, width)
     var i = 0
     while ( {i < 20}) {
@@ -214,7 +214,7 @@ object Frame {
     return temp
   }
 
-  def copyA(): Array[Array[Int]] = {
+  def copyArray(): Array[Array[Int]] = {// copy function that fixes referencing error
     val temp =ofDim[Int](height, width)
     var i = 0
     while ( {i < 20}) {
@@ -228,7 +228,7 @@ object Frame {
     return temp
   }
 
-  def main(args: Array[String]): RecordC = {
+  def main(args: Array[String]): RecordC = {// main function of fram now returns a RecordC object (box of info describing events of the simulation) and can only be run via Demo class
     //nested for loop to populate grid with 0's
     for (i <- 1 to height - 2) {
       for (j <- 1 to width - 2) {
@@ -267,7 +267,7 @@ object Frame {
     grid(10)(8) = door
 
     //CONSTRUCTOR COMPLETE, CAN BE CONSIDERED LEVEL 1
-    Moves.rec.grids.enqueue(copyA())
+    Moves.rec.grids.enqueue(copyArray())//copies first iteration into the queue
     printGrid(height, width,grid)
 
 
@@ -524,7 +524,8 @@ object Frame {
         isDay = !isDay
       }
       println("Steps Taken: "+totalSteps)
-      Moves.rec.grids.enqueue(copyA())
+      //This is the spot to record any data from this iteration of the simulation. Everything is finalized at this point.
+      Moves.rec.grids.enqueue(copyArray())// enqueues new iteration now that all decisions are made
       printGrid(height, width,grid)
 
     }
