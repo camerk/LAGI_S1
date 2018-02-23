@@ -10,6 +10,13 @@ import scala.collection.mutable.Queue
  */
 object Frame {
   //declaring variables
+
+  /*
+   **************@HP pick from these variable to put into Queue's for the Record.scala "box"*************
+   *Where ever you see the line:
+   * Moves.rec.grids.enqueue(copyArrayTransport()) // enqueues transport function iteration
+   * This is where you gather data for the Record.scala "box"
+   */
   val Moves = new RecordC() // for Map Class
   val height: Int = 20
   val width: Int = 20

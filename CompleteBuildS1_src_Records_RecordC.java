@@ -7,6 +7,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+/*
+This class add cloning capabilities to the Record Object
+********DO NOT ALTER WITHOUT TALKING TO CAMERON***********
+ */
+
 @SuppressWarnings("serial")
 public class RecordC implements Cloneable, Serializable {//Implentation of cloning capabilities
 
