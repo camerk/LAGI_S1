@@ -12,5 +12,6 @@ public class Demo {
         RecordC x =  Frame.main(args); // Run Frame (simulation) and save results in X
         Map game = new Map(x);// Run map with the input X from frame
         System.out.println("END ");//Function end flag
+        return;
     }
 }

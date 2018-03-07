@@ -87,8 +87,14 @@ public class Map {
             setPreferredSize(BOARD_PANEL_DIMENSION);
             validate();
         }
-        public void updateBoard(final BoardPanel boardPanel) // updates board
+        public void updateBoard(final BoardPanel boardPanel) // updates board //Will exit when Queue is empty
         {
+            if (record.rec.grids().isEmpty())
+            {
+                JOptionPane.showMessageDialog(null, "LG met the end of his road!", "Simulation Over",
+                        JOptionPane.INFORMATION_MESSAGE);
+                System.exit(0);
+            }
             nextGrid(record.rec.grids().dequeue());
             for(final TilePanel tilePanel : boardTiles)
             {
@@ -169,7 +175,7 @@ public class Map {
         }
 
         private void updateTileImage(final BoardPanel boardPanel){//picks an image to draw on tile based on the map number from the 2D array queue from Frame
-            System.out.println("Update_Tile_Image");//Function call Flag
+            System.out.print("Update_Tile_Image**");//Function call Flag
             if (currMap[this.tileX][this.tileY] == prevMap[this.tileX][this.tileY])// if the new gird is the same as the old, no need to update image on this tile
             {
                 return;
