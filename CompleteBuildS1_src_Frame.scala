@@ -8,7 +8,7 @@ import scala.collection.mutable.Queue
 /*
     Modified by Thomas on 11/20/17
  */
-object Frame {
+object CompleteBuildS1_src_Frame {
   //declaring variables
 
   /*
@@ -196,6 +196,11 @@ object Frame {
       }
       println("Steps Taken: "+totalSteps)
       Moves.rec.grids.enqueue(copyArrayTransport()) // enqueues transport function iteration
+      Moves.rec.isfounds1.enqueue(isFound)
+      Moves.rec.isEaten1.enqueue(isEaten)
+      Moves.rec.isDead1.enqueue (isDead)
+      Moves.rec.isDay1.enqueue(isDay)
+      Moves.rec.signal1.enqueue(signal)
       printGrid(h, w,newenv)
     }
     if (isDead){
@@ -208,7 +213,7 @@ object Frame {
 
 
   def copyArrayTransport(): Array[Array[Int]] = {//copy function for array in transport function that corrects referencing error
-    val temp =ofDim[Int](height, width)
+  val temp =ofDim[Int](height, width)
     var i = 0
     while ( {i < 20}) {
       var j = 0
@@ -222,7 +227,7 @@ object Frame {
   }
 
   def copyArray(): Array[Array[Int]] = {// copy function that fixes referencing error
-    val temp =ofDim[Int](height, width)
+  val temp =ofDim[Int](height, width)
     var i = 0
     while ( {i < 20}) {
       var j = 0
@@ -275,6 +280,11 @@ object Frame {
 
     //CONSTRUCTOR COMPLETE, CAN BE CONSIDERED LEVEL 1
     Moves.rec.grids.enqueue(copyArray())//copies first iteration into the queue
+    Moves.rec.isfounds1.enqueue(isFound)
+    Moves.rec.isEaten1.enqueue(isEaten)
+    Moves.rec.isDead1.enqueue (isDead)
+    Moves.rec.isDay1.enqueue(isDay)
+    Moves.rec.signal1.enqueue(signal)
     printGrid(height, width,grid)
 
 
@@ -533,6 +543,11 @@ object Frame {
       println("Steps Taken: "+totalSteps)
       //This is the spot to record any data from this iteration of the simulation. Everything is finalized at this point.
       Moves.rec.grids.enqueue(copyArray())// enqueues new iteration now that all decisions are made
+      Moves.rec.isfounds1.enqueue(isFound)
+      Moves.rec.isEaten1.enqueue(isEaten)
+      Moves.rec.isDead1.enqueue (isDead)
+      Moves.rec.isDay1.enqueue(isDay)
+      Moves.rec.signal1.enqueue(signal)
       printGrid(height, width,grid)
 
     }
