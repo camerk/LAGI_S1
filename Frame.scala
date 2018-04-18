@@ -31,7 +31,6 @@ object Frame {
   val portalX: Int = 1
   var snakeYs = new Queue[Int]()
   var snakeXs = new Queue[Int]()
-  //all the boolean and totalsteps.
   var isFound: Boolean = false
   var isEaten: Boolean = false
   var isDead: Boolean = false
@@ -99,8 +98,6 @@ object Frame {
 
     printGrid(h, w, newenv)
 
-
-    Moves .rec.isDead1.enqueue(isDead)
     while(!isDead && (exit!=true)) {
 
       LGDecision2 = LGDecisionFactory.decision()
@@ -194,21 +191,22 @@ object Frame {
       //ADDED ENDS
       LGDecisionFactory.receiveSignal(signal)
       totalSteps = totalSteps +1
-
-      Moves .rec.isDay1.enqueue(isDay)
       if (totalSteps%12 == 0){
-        Moves .rec.isDay1.enqueue(isDay)
         isDay = !isDay
-        Moves .rec.isDay1.enqueue(isDay)
       }
       println("Steps Taken: "+totalSteps)
       Moves.rec.grids.enqueue(copyArrayTransport()) // enqueues transport function iteration
+      Moves.rec.isfounds1.enqueue(isFound)
+      Moves.rec.isEaten1.enqueue(isEaten)
+      Moves.rec.isDead1.enqueue (isDead)
+      Moves.rec.isDay1.enqueue(isDay)
+      Moves.rec.signal1.enqueue(signal)
+      Moves.rec.totalSteps1.enqueue(totalSteps)
+      Moves.rec.door1.enqueue(door)
       printGrid(h, w,newenv)
-      Moves .rec.isDead1.enqueue(isDead)
     }
     if (isDead){
       println("LG died of Hunger :c")
-
     }
     check = false
 
@@ -284,13 +282,17 @@ object Frame {
 
     //CONSTRUCTOR COMPLETE, CAN BE CONSIDERED LEVEL 1
     Moves.rec.grids.enqueue(copyArray())//copies first iteration into the queue
+    Moves.rec.isfounds1.enqueue(isFound)
+    Moves.rec.isEaten1.enqueue(isEaten)
+    Moves.rec.isDead1.enqueue (isDead)
+    Moves.rec.isDay1.enqueue(isDay)
+    Moves.rec.signal1.enqueue(signal)
+    Moves.rec.totalSteps1.enqueue(totalSteps)
+    Moves.rec.door1.enqueue(door)
     printGrid(height, width,grid)
 
-    Moves .rec.isfounds.enqueue(isFound)
-    Moves.rec.isEaten1.enqueue(isEaten)
-    while(!isFound && !isEaten && !isDead)
-    {
 
+    while(!isFound && !isEaten && !isDead) {
       snakeDecision = snakeDecisionFactory.decision()
       println("Snake wants to move : "+ snakeDecision)
       if (snakeDecision == 1) {
@@ -396,7 +398,6 @@ object Frame {
             signal = 7
             transport()
           }
-
           //END TRANSPORT
 
           else {
@@ -410,10 +411,8 @@ object Frame {
             LGY = LGY - 1
             grid(LGY)(LGX) = 1
           }
-          Moves.rec.isfounds.enqueue(isFound)
         }
-        else if (LGDecision == 2)
-        {
+        else if (LGDecision == 2) {
           //wall
           if (grid(LGY + 1)(LGX) == -1) {
             signal = -1
@@ -544,22 +543,22 @@ object Frame {
       totalSteps = totalSteps +1
       if (totalSteps%12 == 0){
         isDay = !isDay
-        Moves .rec.isDay1.enqueue(isDay)
       }
-
       println("Steps Taken: "+totalSteps)
       //This is the spot to record any data from this iteration of the simulation. Everything is finalized at this point.
       Moves.rec.grids.enqueue(copyArray())// enqueues new iteration now that all decisions are made
-      printGrid(height, width,grid)
-
-      Moves.rec.isfounds.enqueue(isFound)
+      Moves.rec.isfounds1.enqueue(isFound)
       Moves.rec.isEaten1.enqueue(isEaten)
+      Moves.rec.isDead1.enqueue (isDead)
+      Moves.rec.isDay1.enqueue(isDay)
+      Moves.rec.signal1.enqueue(signal)
+      Moves.rec.totalSteps1.enqueue(totalSteps)
+      Moves.rec.door1.enqueue(door)
+      printGrid(height, width,grid)
 
     }
     if (isDead){
       println("LG died of Hunger :c")
-
-
     }
     else if (isEaten){
       println("LG was eaten by the snake :S")
