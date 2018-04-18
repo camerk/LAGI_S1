@@ -17,6 +17,8 @@ var steps : Int = 0
   val isDead1 =new Queue[Boolean]()
   val isDay1 =new Queue[Boolean]()
   val signal1 = new  Queue[Int] ()
+  val totalSteps1 =new Queue[Int]()
+  val door1 = new Queue[Int]()
 
 }
 
