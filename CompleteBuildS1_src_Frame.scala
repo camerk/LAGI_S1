@@ -201,6 +201,8 @@ object CompleteBuildS1_src_Frame {
       Moves.rec.isDead1.enqueue (isDead)
       Moves.rec.isDay1.enqueue(isDay)
       Moves.rec.signal1.enqueue(signal)
+      Moves.rec.totalSteps1.enqueue(totalSteps)
+      Moves.rec.door1.enqueue(door)
       printGrid(h, w,newenv)
     }
     if (isDead){
@@ -285,6 +287,8 @@ object CompleteBuildS1_src_Frame {
     Moves.rec.isDead1.enqueue (isDead)
     Moves.rec.isDay1.enqueue(isDay)
     Moves.rec.signal1.enqueue(signal)
+    Moves.rec.totalSteps1.enqueue(totalSteps)
+    Moves.rec.door1.enqueue(door)
     printGrid(height, width,grid)
 
 
@@ -548,6 +552,8 @@ object CompleteBuildS1_src_Frame {
       Moves.rec.isDead1.enqueue (isDead)
       Moves.rec.isDay1.enqueue(isDay)
       Moves.rec.signal1.enqueue(signal)
+      Moves.rec.totalSteps1.enqueue(totalSteps)
+      Moves.rec.door1.enqueue(door)
       printGrid(height, width,grid)
 
     }
