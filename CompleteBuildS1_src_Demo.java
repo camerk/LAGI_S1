@@ -1,7 +1,9 @@
 import Records.RecordC;
 import Snakes.Frame;
 
-
+/*
+Last Edited by Cameron Kane 5/2/18
+*/
 /*
     This Class runs the LG simulation and passes the results of to the graphics program.
 */

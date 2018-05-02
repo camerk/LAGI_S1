@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+/*
+Last Edited by Cameron Kane 5/2/18
+*/
 
 /*
 This class add cloning capabilities to the Record Object

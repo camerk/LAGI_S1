@@ -6,7 +6,7 @@ import scala.Array.ofDim
 import scala.collection.mutable.Queue
 
 /*
-    Modified by Thomas on 11/20/17
+    Modified by Thomas on 02/26/18
  */
 object Frame {
   //declaring variables
@@ -31,12 +31,12 @@ object Frame {
   val portalX: Int = 1
   var snakeYs = new Queue[Int]()
   var snakeXs = new Queue[Int]()
-  var isFound: Boolean = false
-  var isEaten: Boolean = false
-  var isDead: Boolean = false
-  var isDay: Boolean = true
+  var isFound: Boolean = false //Won the game ****Cameron need this****
+  var isEaten: Boolean = false //Snake ate LG  ****Cameron needs this*****
+  var isDead: Boolean = false //LG died ****Cameron needs this*****
+  var isDay: Boolean = true // Day or night indication  ****Cameron needs this*****
   var signal: Int = -999
-  var totalSteps: Int = 0
+  var totalSteps: Int = 0 //steps taken  ****Cameron needs this*****
   var check = false
   var door: Int = 7
 
@@ -196,6 +196,13 @@ object Frame {
       }
       println("Steps Taken: "+totalSteps)
       Moves.rec.grids.enqueue(copyArrayTransport()) // enqueues transport function iteration
+      Moves.rec.isfounds1.enqueue(isFound)
+      Moves.rec.isEaten1.enqueue(isEaten)
+      Moves.rec.isDead1.enqueue (isDead)
+      Moves.rec.isDay1.enqueue(isDay)
+      Moves.rec.signal1.enqueue(signal)
+      Moves.rec.totalSteps1 = totalSteps
+      Moves.rec.door1.enqueue(door)
       printGrid(h, w,newenv)
     }
     if (isDead){
@@ -269,12 +276,19 @@ object Frame {
     grid(3)(17) = 4
     grid(12)(12) = 4
     grid(17)(3) = 4
-    grid(5)(6) = door
-    grid(6)(11) = door
-    grid(10)(8) = door
+    grid(5)(4) = door
+    grid(9)(10) = door
+    grid(14)(3) = door
 
     //CONSTRUCTOR COMPLETE, CAN BE CONSIDERED LEVEL 1
     Moves.rec.grids.enqueue(copyArray())//copies first iteration into the queue
+    Moves.rec.isfounds1.enqueue(isFound)
+    Moves.rec.isEaten1.enqueue(isEaten)
+    Moves.rec.isDead1.enqueue (isDead)
+    Moves.rec.isDay1.enqueue(isDay)
+    Moves.rec.signal1.enqueue(signal)
+    Moves.rec.totalSteps1 = totalSteps
+    Moves.rec.door1.enqueue(door)
     printGrid(height, width,grid)
 
 
@@ -282,7 +296,7 @@ object Frame {
       snakeDecision = snakeDecisionFactory.decision()
       println("Snake wants to move : "+ snakeDecision)
       if (snakeDecision == 1) {
-        if (grid(snakeHeadY - 1)(snakeHeadX) == -1 || grid(snakeHeadY-1)(snakeHeadX) == 4 || grid(snakeHeadY - 1)(snakeHeadX) == 2 || grid(snakeHeadY-1)(snakeHeadX) == 5) {
+        if (grid(snakeHeadY - 1)(snakeHeadX) == 7 || grid(snakeHeadY - 1)(snakeHeadX) == -1 || grid(snakeHeadY-1)(snakeHeadX) == 4 || grid(snakeHeadY - 1)(snakeHeadX) == 2 || grid(snakeHeadY-1)(snakeHeadX) == 5) {
           signal = -1
         }
         else {
@@ -299,7 +313,7 @@ object Frame {
         }
       }
       else if (snakeDecision == 2) {
-        if (grid(snakeHeadY + 1)(snakeHeadX) == -1 || grid(snakeHeadY+1)(snakeHeadX) == 4 || grid(snakeHeadY + 1)(snakeHeadX) == 2 || grid(snakeHeadY + 1)(snakeHeadX) == 5) {
+        if (grid(snakeHeadY + 1)(snakeHeadX) == 7 ||grid(snakeHeadY + 1)(snakeHeadX) == -1 || grid(snakeHeadY+1)(snakeHeadX) == 4 || grid(snakeHeadY + 1)(snakeHeadX) == 2 || grid(snakeHeadY + 1)(snakeHeadX) == 5) {
           signal = -1
         }
         else {
@@ -317,7 +331,7 @@ object Frame {
       }
 
       else if (snakeDecision == 3) {
-        if (grid(snakeHeadY)(snakeHeadX - 1) == -1 || grid(snakeHeadY)(snakeHeadX-1) == 4 || grid(snakeHeadY)(snakeHeadX - 1) == 2 ||grid(snakeHeadY)(snakeHeadX - 1) == 5) {
+        if (grid(snakeHeadY)(snakeHeadX-1) == 7 || grid(snakeHeadY)(snakeHeadX - 1) == -1 || grid(snakeHeadY)(snakeHeadX-1) == 4 || grid(snakeHeadY)(snakeHeadX - 1) == 2 ||grid(snakeHeadY)(snakeHeadX - 1) == 5) {
           signal = -1
         }
         else {
@@ -334,7 +348,7 @@ object Frame {
         }
       }
       else if (snakeDecision == 4) {
-        if (grid(snakeHeadY)(snakeHeadX + 1) == -1 || grid(snakeHeadY)(snakeHeadX + 1) == 4 || grid(snakeHeadY)(snakeHeadX + 1) == 2 ||grid(snakeHeadY)(snakeHeadX + 1) == 5) {
+        if (grid(snakeHeadY)(snakeHeadX + 1) == 7 ||grid(snakeHeadY)(snakeHeadX + 1) == -1 || grid(snakeHeadY)(snakeHeadX + 1) == 4 || grid(snakeHeadY)(snakeHeadX + 1) == 2 ||grid(snakeHeadY)(snakeHeadX + 1) == 5) {
           signal = -1
         }
         else {
@@ -533,6 +547,13 @@ object Frame {
       println("Steps Taken: "+totalSteps)
       //This is the spot to record any data from this iteration of the simulation. Everything is finalized at this point.
       Moves.rec.grids.enqueue(copyArray())// enqueues new iteration now that all decisions are made
+      Moves.rec.isfounds1.enqueue(isFound)
+      Moves.rec.isEaten1.enqueue(isEaten)
+      Moves.rec.isDead1.enqueue (isDead)
+      Moves.rec.isDay1.enqueue(isDay)
+      Moves.rec.signal1.enqueue(signal)
+      Moves.rec.totalSteps1 = totalSteps
+      Moves.rec.door1.enqueue(door)
       printGrid(height, width,grid)
 
     }

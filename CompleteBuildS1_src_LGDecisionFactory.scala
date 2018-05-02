@@ -3,6 +3,9 @@ package Snakes
 import scala.util.Random
 import scala.Array.ofDim
 
+import scala.collection.mutable.Stack
+import java.io._
+
 /**
   * Changed by Thomas on 10/20/17.
   */
@@ -13,9 +16,26 @@ object LGDecisionFactory {
   var lastMove: Int = 0
   var stepsSinceFood: Int = 0
   var hasHunger: Boolean = false
+  var shortTermMem = Stack[Int]()
+  var popped: Boolean = false
 
+  def STMPush(dec : Int)= {
 
+    //Records the movement of LG but opposite direction gets pushed
+    // (i.e LG moves left[3], stack records right[4])
+
+    if(dec!=0){
+      if(dec<3)
+        shortTermMem.push((dec%2)+1)
+      else
+        shortTermMem.push((dec%2)+3)
+    }
+
+    //This line prints out top of the stack, shows movement from above grid to below grid
+    println("New movement " + shortTermMem.top)
+  }
   def decision(): Int = {
+    popped = false
     var decision: Int = 0
 
     //determine if LG is hungry/dead
@@ -67,6 +87,9 @@ object LGDecisionFactory {
         }
       }
     }
+    if(!Frame.check && !popped)
+      STMPush(decision) //LG has ran through all checks and can add the step to memory
+
     var temp: Int = decision
     decision = 0
     //update last move
@@ -81,6 +104,7 @@ object LGDecisionFactory {
     sig match {
       case -1 => {
         println("LG: wall collision\n")
+        shortTermMem.pop() // if LG runs into wall, pushes to stack, needs to get rid of the memory b/c didn't actually move
       }
       case 1 => {
         println("LG: successful move\n")
@@ -213,7 +237,13 @@ object LGDecisionFactory {
       println("Saw snake")
       if (sawSnake(0)) {
         //snake is up
-        if(Frame.grid(Frame.LGY+1)(Frame.LGX) == -1){
+        if(shortTermMem.top!=1){
+          retval = shortTermMem.top //FIX THIS PLEASE, LG CAN MOVE TO SNAKE
+          println("POPPED: " + shortTermMem.top)
+          popped = true
+          shortTermMem.pop()
+        }
+        else if(Frame.grid(Frame.LGY+1)(Frame.LGX) == -1){
           retval = Random.nextInt(1) + 3
         }
         else {
@@ -222,7 +252,13 @@ object LGDecisionFactory {
       }
       else if(sawSnake(1)){
         //snake is down
-        if(Frame.grid(Frame.LGY-1)(Frame.LGX) == -1){
+        if(shortTermMem.top!=2){
+          retval = shortTermMem.top //FIX THIS PLEASE, LG CAN MOVE TO SNAKE
+          println("POPPED: " + shortTermMem.top)
+          popped = true
+          shortTermMem.pop()
+        }
+        else if(Frame.grid(Frame.LGY-1)(Frame.LGX) == -1){
           retval = Random.nextInt(1) + 3
         }
         else {
@@ -231,21 +267,32 @@ object LGDecisionFactory {
       }
       else if(sawSnake(2)){
         //snake left
-        if(Frame.grid(Frame.LGY)(Frame.LGX+1) == -1){
+        if(shortTermMem.top!=3){
+          retval = shortTermMem.top //FIX THIS PLEASE, LG CAN MOVE TO SNAKE
+          println("POPPED: " + shortTermMem.top)
+          popped = true
+          shortTermMem.pop()
+        }
+        else if(Frame.grid(Frame.LGY)(Frame.LGX+1) == -1){
           retval = Random.nextInt(1) + 1
         }
-        else {
+        else
           retval = 4
-        }
+
       }
       else if(sawSnake(3)){
         //snake right
-        if(Frame.grid(Frame.LGY)(Frame.LGX-1) == -1){
+        if(shortTermMem.top!=4) {
+          retval = shortTermMem.top //FIX THIS PLEASE, LG CAN MOVE TO SNAKE
+          println("POPPED: " + shortTermMem.top)
+          popped = true
+          shortTermMem.pop()
+        }
+        else if(Frame.grid(Frame.LGY)(Frame.LGX-1) == -1){
           retval = Random.nextInt(1) + 1
         }
-        else {
+        else
           retval = 3
-        }
       }
     }
     else if (sawPortal.contains(true)) {
@@ -390,7 +437,13 @@ object LGDecisionFactory {
       println("Saw snake")
       if (sawSnake(0)) {
         //snake is up
-        if(Frame.grid(Frame.LGY+1)(Frame.LGX) == -1){
+        if(shortTermMem.top!=1){
+          retval = shortTermMem.top
+          println("POPPED: " + shortTermMem.top)
+          popped = true
+          shortTermMem.pop()
+        }
+        else if(Frame.grid(Frame.LGY+1)(Frame.LGX) == -1){
           retval = Random.nextInt(1) + 3
         }
         else {
@@ -399,7 +452,13 @@ object LGDecisionFactory {
       }
       else if(sawSnake(1)){
         //snake is down
-        if(Frame.grid(Frame.LGY-1)(Frame.LGX) == -1){
+        if(shortTermMem.top!=2){
+          retval = shortTermMem.top
+          println("POPPED: " + shortTermMem.top)
+          popped = true
+          shortTermMem.pop()
+        }
+        else if(Frame.grid(Frame.LGY-1)(Frame.LGX) == -1){
           retval = Random.nextInt(1) + 3
         }
         else {
@@ -408,21 +467,32 @@ object LGDecisionFactory {
       }
       else if(sawSnake(2)){
         //snake left
-        if(Frame.grid(Frame.LGY)(Frame.LGX+1) == -1){
+        if(shortTermMem.top!=3){
+          retval = shortTermMem.top
+          println("POPPED: " + shortTermMem.top)
+          popped = true
+          shortTermMem.pop()
+        }
+        else if(Frame.grid(Frame.LGY)(Frame.LGX+1) == -1){
           retval = Random.nextInt(1) + 1
         }
-        else {
+        else
           retval = 4
-        }
+
       }
       else if(sawSnake(3)){
         //snake right
-        if(Frame.grid(Frame.LGY)(Frame.LGX-1) == -1){
+        if(shortTermMem.top!=4) {
+          retval = shortTermMem.top
+          println("POPPED: " + shortTermMem.top)
+          popped = true
+          shortTermMem.pop()
+        }
+        else if(Frame.grid(Frame.LGY)(Frame.LGX-1) == -1){
           retval = Random.nextInt(1) + 1
         }
-        else {
+        else
           retval = 3
-        }
       }
     }
     else if (sawFood.contains(true)) {
@@ -547,7 +617,13 @@ object LGDecisionFactory {
       println("Saw snake")
       if (sawSnake(0)) {
         //snake is up
-        if(Frame.grid(Frame.LGY+1)(Frame.LGX) == -1){
+        if(shortTermMem.top!=1){
+          retval = shortTermMem.top //FIX THIS PLEASE, LG CAN MOVE TO SNAKE
+          println("POPPED: " + shortTermMem.top)
+          popped = true
+          shortTermMem.pop()
+        }
+        else if(Frame.grid(Frame.LGY+1)(Frame.LGX) == -1){
           retval = Random.nextInt(1) + 3
         }
         else {
@@ -556,7 +632,13 @@ object LGDecisionFactory {
       }
       else if(sawSnake(1)){
         //snake is down
-        if(Frame.grid(Frame.LGY-1)(Frame.LGX) == -1){
+        if(shortTermMem.top!=2){
+          retval = shortTermMem.top //FIX THIS PLEASE, LG CAN MOVE TO SNAKE
+          println("POPPED: " + shortTermMem.top)
+          popped = true
+          shortTermMem.pop()
+        }
+        else if(Frame.grid(Frame.LGY-1)(Frame.LGX) == -1){
           retval = Random.nextInt(1) + 3
         }
         else {
@@ -565,21 +647,32 @@ object LGDecisionFactory {
       }
       else if(sawSnake(2)){
         //snake left
-        if(Frame.grid(Frame.LGY)(Frame.LGX+1) == -1){
+        if(shortTermMem.top!=3){
+          retval = shortTermMem.top //FIX THIS PLEASE, LG CAN MOVE TO SNAKE
+          println("POPPED: " + shortTermMem.top)
+          popped = true
+          shortTermMem.pop()
+        }
+        else if(Frame.grid(Frame.LGY)(Frame.LGX+1) == -1){
           retval = Random.nextInt(1) + 1
         }
-        else {
+        else
           retval = 4
-        }
+
       }
       else if(sawSnake(3)){
         //snake right
-        if(Frame.grid(Frame.LGY)(Frame.LGX-1) == -1){
+        if(shortTermMem.top!=4) {
+          retval = shortTermMem.top //FIX THIS PLEASE, LG CAN MOVE TO SNAKE
+          println("POPPED: " + shortTermMem.top)
+          popped = true
+          shortTermMem.pop()
+        }
+        else if(Frame.grid(Frame.LGY)(Frame.LGX-1) == -1){
           retval = Random.nextInt(1) + 1
         }
-        else {
+        else
           retval = 3
-        }
       }
     }
     else if (sawPortal.contains(true)) {

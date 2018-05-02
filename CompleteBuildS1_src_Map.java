@@ -1,14 +1,10 @@
 
 import Records.RecordC;
-import org.lwjgl.*;
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
-import scala.collection.mutable.Queue;
-
+/*
+Last Edited by Cameron Kane 5/2/18
+*/
 
 import javax.imageio.ImageIO;
-import javax.imageio.plugins.jpeg.JPEGHuffmanTable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,15 +14,11 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.glfw.Callbacks.*;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static java.lang.System.exit;
+
 
 public class Map {
 
@@ -43,7 +35,18 @@ public class Map {
     private final String imageDir = "art/";//needs to be edited to have image Directory that holds all of the images used
     private RecordC record;
     private boolean isFirst = true;// tells if the map is on the first iteration or not
-
+    int stepCount = 0;
+    int totalStepCount = 0;
+    String tod = "Day";
+    String temp;
+    JLabel currStepLabel = new JLabel("Current Step: " + stepCount);
+    JLabel totalStepLabel = new JLabel("Total Steps: " + totalStepCount);
+    JLabel TODLabel = new JLabel(" Time of Day: " + tod);
+    boolean isEaten = false;
+    boolean isFound = false;
+    boolean isDead = false;
+    boolean isDay = true;
+    String ResultString = "Little Guy met the end of his Road!";
 
     public Map(RecordC rec){// Map class: makes window calling other classes in this file
         this.LGFrame = new JFrame("LAGI");
@@ -57,13 +60,27 @@ public class Map {
         //make Record class seriealizable and then deepClone it into a Record object in the map class
         this.boardPanel = new BoardPanel();
         this.LGFrame.add(this.boardPanel, BorderLayout.CENTER);
-        // grade = rec.grade();// 2D array holding the grade of each tile on the map for color depiction
+        totalStepLabel.setText( "   Total Steps: " + record.rec.totalSteps1());
+        isEaten = (boolean) record.rec.isEaten1().dequeue();
+        isFound = (boolean) record.rec.isfounds1().dequeue();
+        isDead = (boolean) record.rec.isDead1().dequeue();
+        isDay = (boolean) record.rec.isDay1().dequeue();
+        setTOD();
         this.LGFrame.setVisible(true);
 
 
 
     }
 
+    private void setTOD() {
+        if (isDay == true){
+            tod = " Day time ";
+        }
+        else {
+            tod = " Night time";
+        }
+        TODLabel.setText(" Time of Day: " + tod);
+    }
 
     private class BoardPanel extends JPanel{//board class
         final List<TilePanel> boardTiles;
@@ -91,17 +108,40 @@ public class Map {
         {
             if (record.rec.grids().isEmpty())
             {
-                JOptionPane.showMessageDialog(null, "LG met the end of his road!", "Simulation Over",
+                if (isEaten == true)
+                {
+                    ResultString = "Little Guy was Eaten!";
+                }
+                else if (isFound == true)
+                {
+                    ResultString = "Little Guy Found the Portal! He survived and won!";
+                }
+                else if (isDead == true)
+                {
+                    ResultString = "Little guy Died of Hunger :/";
+                }
+                JOptionPane.showMessageDialog(null, ResultString, "Simulation Over",
                         JOptionPane.INFORMATION_MESSAGE);
-                System.exit(0);
+                exit(0);
             }
             nextGrid(record.rec.grids().dequeue());
+
+            isEaten = (boolean) record.rec.isEaten1().dequeue();
+            isFound = (boolean) record.rec.isfounds1().dequeue();
+            isDead = (boolean) record.rec.isDead1().dequeue();
+            isDay = (boolean) record.rec.isDay1().dequeue();
+            setTOD();
+
+            stepCount++;
+            currStepLabel.setText("Current Step: "+ stepCount);
             for(final TilePanel tilePanel : boardTiles)
             {
                 tilePanel.updateTile(boardPanel);
             }
             validate();
         }
+
+
         public void drawBoard(final BoardPanel boardPanel) // Draws board, currently also used to update the board
         {
             nextGrid(record.rec.grids().dequeue());
@@ -260,20 +300,23 @@ public class Map {
 
     private void populateMenuBar(final JMenuBar tableMenuBar){
         tableMenuBar.add(createFileMenu());
+        tableMenuBar.add(currStepLabel);
+        tableMenuBar.add(totalStepLabel);
+        tableMenuBar.add(TODLabel);
     }//Just makes a menu bar, could actually contain things in it at some point
 
     private JMenu createFileMenu(){
-        final JMenu fileMenu  = new JMenu("File");
+        final JMenu OpMenu  = new JMenu("Options");
 
-        final JMenuItem NextSlide = new JMenuItem("Next Move");
+        final JMenuItem NextSlide = new JMenuItem("Exit");
         NextSlide.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Next grid iteration");
+                exit(0);
             }
         });
-        fileMenu.add(NextSlide);
-        return fileMenu;
+        OpMenu.add(NextSlide);
+        return OpMenu;
     }
 
     public void nextGrid(int [][] x) //Copies 2D array avoiding referencing error
@@ -291,6 +334,11 @@ public class Map {
         }
         isFirst = false;
         System.out.println("NG");//Function flag
+    }
+
+    public void exitCatch()
+    {
+
     }
 }
 
