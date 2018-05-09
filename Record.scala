@@ -12,10 +12,14 @@ var steps : Int = 0
    *You will have to make queues for each variable you put in here
    */
   val grids = new Queue[Array[Array[Int]]]()
-  val isfounds  = new Queue[Boolean]()
+  val isfounds1  = new Queue[Boolean]()
   val isEaten1 = new Queue[Boolean]()
   val isDead1 =new Queue[Boolean]()
   val isDay1 =new Queue[Boolean]()
+  val signal1 = new  Queue[Int] ()
+  val totalSteps1 =new Queue[Int]()
+  val door1 = new Queue[Int]()
+
 }
 
 
